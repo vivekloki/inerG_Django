@@ -25,48 +25,48 @@ class AnnualDataView(APIView):
         except Organization.DoesNotExist:
             return Response({'error': 'Organization not found'}, status=404)
 
-    def post(self, request):
-        try:
-            csv_file_path = self.get_csv_file_path()
-            response = self.load_annual_data_from_csv(csv_file_path)
-            return response
-        except Exception as e:
-            return Response({'error': str(e)}, status=500)
+    # def post(self, request):
+    #     try:
+    #         csv_file_path = self.get_csv_file_path()
+    #         response = self.load_annual_data_from_csv(csv_file_path)
+    #         return response
+    #     except Exception as e:
+    #         return Response({'error': str(e)}, status=500)
 
-    def load_annual_data_from_csv(self, csv_file):
-        try:
-            with open(csv_file, 'r') as file:
-                reader = csv.DictReader(file)
-                annual_data = {}
-                for row in reader:
-                    api_well_number = row.get('API WELL  NUMBER', '')
-                    if not api_well_number:
-                        continue
-                    oil = int(row.get('OIL', '0').replace(',', ''))
-                    gas = int(row.get('GAS', '0').replace(',', ''))
-                    brine = int(row.get('BRINE', '0').replace(',', ''))
+    # def load_annual_data_from_csv(self, csv_file):
+    #     try:
+    #         with open(csv_file, 'r') as file:
+    #             reader = csv.DictReader(file)
+    #             annual_data = {}
+    #             for row in reader:
+    #                 api_well_number = row.get('API WELL  NUMBER', '')
+    #                 if not api_well_number:
+    #                     continue
+    #                 oil = int(row.get('OIL', '0').replace(',', ''))
+    #                 gas = int(row.get('GAS', '0').replace(',', ''))
+    #                 brine = int(row.get('BRINE', '0').replace(',', ''))
 
-                    if api_well_number in annual_data:
-                        annual_data[api_well_number]['oil'] += oil
-                        annual_data[api_well_number]['gas'] += gas
-                        annual_data[api_well_number]['brine'] += brine
-                    else:
-                        annual_data[api_well_number] = {'oil': oil, 'gas': gas, 'brine': brine}
+    #                 if api_well_number in annual_data:
+    #                     annual_data[api_well_number]['oil'] += oil
+    #                     annual_data[api_well_number]['gas'] += gas
+    #                     annual_data[api_well_number]['brine'] += brine
+    #                 else:
+    #                     annual_data[api_well_number] = {'oil': oil, 'gas': gas, 'brine': brine}
 
-                # Inserting data into the database
-                for api_well_number, production in annual_data.items():
-                    oil = production['oil']
-                    gas = production['gas']
-                    brine = production['brine']
-                    Organization.objects.update_or_create(
-                        api_well_number=api_well_number,
-                        defaults={'oil': oil, 'gas': gas, 'brine': brine}
-                    )
+    #             # Inserting data into the database
+    #             for api_well_number, production in annual_data.items():
+    #                 oil = production['oil']
+    #                 gas = production['gas']
+    #                 brine = production['brine']
+    #                 Organization.objects.update_or_create(
+    #                     api_well_number=api_well_number,
+    #                     defaults={'oil': oil, 'gas': gas, 'brine': brine}
+    #                 )
 
-                print("Data successfully inserted into database.")
+    #             print("Data successfully inserted into database.")
 
-                # Return a success response
-                return Response({'message': 'Data insertion successful'}, status=200)
-        except Exception as e:
-            # Return an error response
-            return Response({'error': str(e)}, status=500)
+    #             # Return a success response
+    #             return Response({'message': 'Data insertion successful'}, status=200)
+    #     except Exception as e:
+    #         # Return an error response
+    #         return Response({'error': str(e)}, status=500)
