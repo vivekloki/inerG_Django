@@ -6,3 +6,4 @@ class AnnualDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         fields = ['api_well_number', 'oil', 'gas', 'brine']
+        # fields='__all__' 

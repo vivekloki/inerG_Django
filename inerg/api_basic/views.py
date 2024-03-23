@@ -7,11 +7,11 @@ from .models import Organization
 from .serializers import AnnualDataSerializer
 
 class AnnualDataView(APIView):
-    def get_csv_file_path(self):
-        # Get the path to the CSV file dynamically
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        csv_file_path = os.path.join(current_dir, 'inerg_data.csv')
-        return csv_file_path
+    # def get_csv_file_path(self):
+    #     # Get the path to the CSV file dynamically
+    #     current_dir = os.path.dirname(os.path.abspath(__file__))
+    #     csv_file_path = os.path.join(current_dir, 'inerg_data.csv')
+    #     return csv_file_path
 
     def get(self, request):
         well_number = request.query_params.get('well')
